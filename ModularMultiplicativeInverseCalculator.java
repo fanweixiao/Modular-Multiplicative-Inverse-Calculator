@@ -60,6 +60,22 @@ public class ModularMultiplicativeInverseCalculator {
       
       // step 3
       System.out.println("Back substitution: ");
+      curr = steps.get(steps.size() - 1);
+      int z = String.valueOf(curr.b).length();
+      curr = steps.get(steps.size() - 2);
+      System.out.println(curr.tableauAlternate());
+      for (int i = 2; i < steps.size(); i++) {
+         System.out.printf("%" + z + "s = ", " ");
+         for (int j = 0; j < i; j++) {
+            curr = steps.get(steps.size() - j - 2);
+            System.out.print(curr.tableauAlternate("") + "(");
+         }
+         System.out.print(curr.b);
+         for (int j = 0; j < i; j++) {
+            System.out.print(")");
+         }
+         System.out.println();
+      }
    }
    
    // gcd(a, b) = gcd(b, a mod b)
@@ -67,6 +83,7 @@ public class ModularMultiplicativeInverseCalculator {
    private class GCD {
       public int a;
       public int b;
+      public boolean coprime;
       
       public GCD(int a, int b) {
          if (a < 0 || b < 0) {
@@ -77,7 +94,13 @@ public class ModularMultiplicativeInverseCalculator {
       }
       
       public int compute() {
-         return compute(a, b);
+         int result = compute(a, b);
+         if (result == 1) {
+            coprime = true;
+         } else {
+            coprime = false;
+         }
+         return result;
       }
       
       private int compute(int a, int b) {
@@ -108,7 +131,12 @@ public class ModularMultiplicativeInverseCalculator {
       
       // returns r = a - q * b
       public String tableauAlternate() {
-         return a % b + " = " + a + " - " + a / b + " * " + b;
+         return a % b + " = " + tableauAlternate(String.valueOf(b));
+      }
+      
+      // returns a - q * s
+      public String tableauAlternate(String s) {
+         return a + " - " + a / b + " * " + s;
       }
    }
 }
